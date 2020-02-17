@@ -11,17 +11,19 @@ class GamesController < ApplicationController
     letters = params[:letters].split('')
     time = Time.now.to_i - params[:start_time].to_i
     # raise
+    session[:score] = 0 if session[:score].nil?
     if english_word?(word) && check(word, letters)
-      @score = (word.length / time.to_f).round(3)
+      session[:score] += (word.length / time.to_f).round(3)
       @result = 'You win!'
+      @score = session[:score]
     elsif !english_word?(word) && check(word, letters)
-      @score = 0
+      @score = session[:score]
       @result = 'Your word is not an enlish word, but can be build from the letters'
     elsif english_word?(word) && !check(word, letters)
-      @score = 0
+      @score = session[:score]
       @result = 'Your word is an english word but cannot be build from the given lettes'
     else
-      @score = 0
+      @score = session[:score]
       @result = 'Your word is not english and cannot be build from the given letters. You suck'
     end
   end
